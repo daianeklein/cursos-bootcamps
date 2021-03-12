@@ -33,3 +33,21 @@ unique(aulas$section_id)
 # Tamanho do dataset
 # nesting (aninhamento) == funcao dentro de outra funcao
 length(unique(aulas$section_id))
+
+# Contando a qt de vezes que a aula foi assistida
+table(aulas$section_id)
+
+#ordenando por qt. de vezes que a aula foi assistida
+sort(table(aulas$section_id))
+
+# Instalando package
+install.packages("plyr")
+
+# Importando a biblioteca
+library(plyr)
+
+# Atribuindo na variavel 'auxiliar' a contagem do 'course_id'
+auxiliar <- count(aulas, vars = 'course_id')
+
+# Salvando o arquivo
+write.csv(auxiliar, "popularidade.csv")
