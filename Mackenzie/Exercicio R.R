@@ -1,3 +1,4 @@
+
 require(dplyr)
 library(plyr)
 
@@ -50,9 +51,14 @@ summary(mod03)
 mod04 = glm(Survived~. - Fare - Parch - PassengerId -Embarked, data = train, family = binomial(link="logit"))
 summary(mod04)
 
+#Mod05
+mod05 = glm(Survived~. - Fare - Parch - PassengerId , data = train, family = binomial(link="logit"))
+summary(mod05)
+
+
 # Acurácia
 # matriz
-score01 = predict(mod04, type = 'response')
+score01 = predict(mod01, type = 'response')
 table(train$Survived, score01 >= 0.5)
 
 acuracia = (228 + 473) / nrow(train)
@@ -61,13 +67,23 @@ s2 = 473 / (473 + 82)
 
 acuracia
 
-# Acurácia 04
+# Acurácia 05
 # matriz
-score01 = predict(mod01, type = 'response')
+score05 = predict(mod05, type = 'response')
 table(train$Survived, score01 >= 0.5)
 
-acuracia04 = (232 + 473) / nrow(train)
+acuracia05 = (232 + 473) / nrow(train)
 s1 = 232 / (232 + 103)
 s2 = 473 / (473 + 82)
 
-acuracia04
+
+# Utilizando o modelo
+previsao = predict(mod05, type = 'response', newdata = test)
+  test$Survived = as.numeric(previsao >= 0.5)
+table(test$Survived)
+  
+# Exportando o arquivo  
+previsoes = data.frame(test[c("PassengerId","Survived")])
+write.csv(file = "AtividadeAprofundamento.csv", x = previsoes) 
+
+acuracia05
