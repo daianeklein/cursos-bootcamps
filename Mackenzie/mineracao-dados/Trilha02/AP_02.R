@@ -104,11 +104,12 @@ predict_test = predict(fit, newdata=credit, type="raw")
 predict_test = ifelse(predict_test > 0.5, 1, 0)
 
 # Construa a matriz de confus�o 
-c_matrix = table(fit, predict_test)
+c_matrix = table(credit$V16, predict_test)
 print(c_matrix)
 
 # Calcula a acuracidade 
-cat('Accuracy: ', sum(diag(c_matrix))/sum(c_matrix)*100, ' %', "\n")
+acc = sum(diag(c_matrix))/sum(c_matrix) * 100
+cat('Accuracy: ', acc, ' %', "\n")
 
 # Plot da curva ROC
 pr=prediction(as.numeric(predict_test),credit$V16) 
