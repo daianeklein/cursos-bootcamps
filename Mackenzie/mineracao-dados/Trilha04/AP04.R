@@ -1,11 +1,3 @@
-#install.packages("datasets")
-#install.packages("cluster")
-#install.packages("tidyverse")
-#install.packages("corrplot")
-#install.packages("gridExtra")
-#install.packages("GGally")
-#install.packages("factoextra")
-
 library(datasets) # USArrests
 library(cluster)
 library(tidyverse)
@@ -55,10 +47,9 @@ plot(1:10, bss, type="b", xlab="Number of Clusters", ylab="Betweenss groups sum 
 abline(v=4,col="red")
 
 # consulte o help(kmeans) e empregue a fun��o para responder a Q2  
-# fit = kmeans(mydata, k, nstart=25) 
+fit = kmeans(USArrests, centers = 4, nstart=25) 
 #
 
-# 
 # 2.2. Group Sizes                                 Q3  
 # ----------------------------------------------------------------------------------
 
@@ -72,9 +63,7 @@ for (i in 3:6){
 
 # 
 # consulte o help(kmeans) e empregue a fun��o para responder a Q3  
-# fit = kmeans(mydata, k, nstart=25) 
-#
-
+kmeans(USArrests, 4, nstart=25)
 #
 # 2.3. Silhouette Method                           Q4  
 # ----------------------------------------------------------------------------------
@@ -103,9 +92,9 @@ fit <- kmeans(mydata,  3, nstart=25)
 ss <- silhouette(fit$cluster, dist(mydata))
 plot(ss)
 
-fit <- kmeans(mydata,  4, nstart=25)
-ss <- silhouette(fit$cluster, dist(mydata))
-plot(ss)
+  fit <- kmeans(mydata,  4, nstart=25)
+  ss <- silhouette(fit$cluster, dist(mydata))
+  plot(ss)
 
 fit <- kmeans(mydata,  5, nstart=25)
 ss <- silhouette(fit$cluster, dist(mydata))
@@ -115,12 +104,8 @@ fit <- kmeans(mydata,  6, nstart=25)
 ss <- silhouette(fit$cluster, dist(mydata))
 plot(ss)
 
-# se necess�rio consulte o help(silhouette) e empregue a fun��o para responder a Q3  
 
-
-#
 # 3. ANALISE DOS GRUPOS (DOS RESULTADOS)           Q5  
-# ----------------------------------------------------------------------------------
 
 set.seed(1987) # n�o altere para que seu resultados correspondam ao question�rio
 fit <- kmeans(mydata,4, nstart=25)
@@ -130,19 +115,10 @@ ss <- silhouette(fit$cluster, dist(mydata))
 plot(ss)
 mean(ss[,3])
 
-# 
 # a. Visualizando o Cluster para os Dois Componentes Principais
-# (voc� vai conhecer mais sobre componente principais na pr�xima trilha)
-#
 
 par(mfrow=c(1, 1))
 clusplot(mydata, fit$cluster, color=TRUE, shade=TRUE, labels=2, lines=0)
-
-# library(fpc) 
-# voc� pode ignorar se encontrar a msg 
-# Error: could not find function "plotcluster"
-#
-plotcluster(mydata, fit$cluster)
 
 # 
 # b. Visualizando o Cluster para Duas vari�veis de sua escolha 
@@ -150,9 +126,10 @@ plotcluster(mydata, fit$cluster)
 
 p1 = ggplot(mydata, aes(UrbanPop, Murder, color = as.factor(fit$cluster))) + geom_point()
 p2 = ggplot(mydata, aes(UrbanPop, Assault, color = as.factor(fit$cluster))) + geom_point()
-p3 = ggplot(mydata, aes(UrbanPop, Murder, color = as.factor(fit$cluster))) + geom_point()
+p3 = ggplot(mydata, aes(UrbanPop, Rape, color = as.factor(fit$cluster))) + geom_point()
 
 grid.arrange(p1, p2, p3)
+
 
 # 
 # c. Visualizando os valores m�dios de cada Cluster 
@@ -166,9 +143,7 @@ for (i in 1:4){
   barplot(sapply(mydata[mydata$predict==i,-5],mean),main=main_) 
 }
 
-# 
 # d. Visualizando o Cluster para a diferentes pares de vari�veis e suas distribui��es
-#
 
 ggpairs(cbind(mydata, Cluster=as.factor(fit$cluster)),
         columns=1:4, aes(colour=Cluster, alpha=0.5),
@@ -176,10 +151,7 @@ ggpairs(cbind(mydata, Cluster=as.factor(fit$cluster)),
         upper=list(continuous="blank"),
         axisLabels="none", switch="both") 
 
-#
 # 4. PAM K MED�IDES                       Q6 
-# ----------------------------------------------------------------------------------
-# para reestabelecer somente os valores de Murder, Assault, UrbanPop, Rape  
 mydata_pam = mydata[,-c(5)] # retira o valor predict acrescentado anteriormente
 
 set.seed(1987) # n�o altere para que seu resultados correspondam ao question�rio
@@ -197,7 +169,7 @@ mean(ss[,3])
 # 
 # 5. CLUSTER HIERARQUICO HCLUST            Q7 Q8 Q9
 # ----------------------------------------------------------------------------------
-# para reestabelecer somente os valores de Murder, Assault, UrbanPop, Rape  
+
 mydata_hclu = mydata[,-c(5)] # retira o valor predict acrescentado anteriormente
 
 set.seed(1987) # n�o altere para que seu resultados correspondam ao question�rio
@@ -207,9 +179,14 @@ d <- dist(mydata_hclu, method = "euclidean") # distance matrix
 #    vez escolhendo o melhor particionamento
 #
 
-fit <- hclust(d, method = "complete")                   
-# fit <- hclust(d, method = "single") 
-# fit <- hclust(d, method = "average")  
+fit <- hclust(d, method = "complete")
+fit
+
+fit <- hclust(d, method = "single")
+fit
+
+fit <- hclust(d, method = "average")
+fit
 
 #
 #    A seguir repetem-se os mesmos procedimentos empregados para o K-m�dias: 
