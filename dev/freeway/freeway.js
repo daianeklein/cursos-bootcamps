@@ -1,28 +1,29 @@
-let imagemDaEstrada;
-let imagemDoAtor;
-let imagemCarro;
+//código do carro
 
-//variaveis do carro
-xCarro = 420;
-
-function preload(){
-  imagemDaEstrada = loadImage("imagens/estrada.png");
-}
-
-function setup() {
-  createCanvas(500, 400);
-}
-
-function draw() {
-  background(imagemDaEstrada);
-  image(imagemDoAtor, 100, 366, 30, 30);
-  image(ImagemCarro, xCarro, 40 ,50, 40 );
-}
-
-function mostraAtor(){
-  imagemDoAtor = loadImage("imagens/ator-1.png");
-}
+let xCarros = [600, 600, 600];
+let yCarros = [40, 96, 150];
+let velocidadeCarros = [2, 2.5, 3.2];
 
 function mostraCarro(){
-  ImagemCarro = loadImage("imagens/carro-1.png")
+  for (let i = 0; i < imagemCarros.length; i = i + 1){
+    image(imagemCarros[i], xCarros[i], yCarros[i], 50, 40);
+  }
+}
+
+function movimentaCarro(){
+  for (let i = 0; i < imagemCarros.length; i = i + 1){
+    xCarros[i] -= velocidadeCarros[i];
+  }
+}
+
+function voltaPosicaoInicialDoCarro(){
+  for (let i = 0; i < imagemCarros.length; i = i + 1){
+    if (passouTodaATela(xCarros[i])){
+      xCarros[i] = 600;
+    }
+  }
+}
+
+function passouTodaATela(xCarro){
+  return xCarro < - 50;
 }
