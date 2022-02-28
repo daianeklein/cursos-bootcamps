@@ -1,3 +1,5 @@
+
+
 header {
     background: #BBBBBB;
     padding: 20px 0;
@@ -13,6 +15,7 @@ nav {
     position: absolute;
     top: 110px;
     right: 0;
+    margin-right: 92px;
 }
 
 nav li {
