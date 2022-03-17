@@ -1,94 +1,235 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title>Contato - Barbearia Alura</title>
+header {
+	background: #BBBBBB;
+	padding: 20px 0;
+}
 
-		<link rel="stylesheet" href="reset.css">
-		<link rel="stylesheet" href="style-produtos.css">
-	</head>
-	<body>
-		<header>
-			<div class="caixa">
-				<h1><img src="logo.png" alt="Logo da Barbearia Alura"></h1>
+.caixa {
+	position: relative;
+	width: 940px;
+	margin: 0 auto;
+}
 
-				<nav>
-					<ul>
-						<li><a href="index.html">Home</a></li>
-						<li><a href="produtos.html">Produtos</a></li>
-						<li><a href="contato.html">Contato</a></li>
-					</ul>
-				</nav>
-			</div>
-		</header>
+nav {
+	position: absolute;
+	top: 110px;
+	right: 0;
+}
 
-		<main>
-			<form>
-				<label for="nomesobrenome">Nome e Sobrenome</label>
-				<input type="text" id="nomesobrenome" class="input-padrao" required>
+nav li {
+	display: inline;
+	margin: 0 0 0 15px;
+}
 
-				<label for="email">E-mail</label>
-				<input type="email" id="email" class="input-padrao" required placeholder="seuemail@dominio.com">
+nav a {
+	text-transform: uppercase;
+	color: #000000;
+	font-weight: bold;
+	font-size: 22px;
+	text-decoration: none;
+}
 
-				<label for="telefone">Telefone</label>
-				<input type="tel" id="telefone" class="input-padrao" required placeholder="(XX) XXXXX-XXXX">
+nav a:hover {
+	color: #C78C19;
+	text-decoration: underline;
+}
 
-				<label for="mensagem">Mensagem</label>
-				<textarea cols=70 rows=10 id="mensagem"required ></textarea>
+.produtos {
+	width: 940px;
+	margin: 0 auto;
+	padding: 50px 0;
+}
 
-				<fieldset>
-					<legend> Como prefere o nosso contato? </legend>
-					<label for="ratio-email"><input type="radio" name="contato" value="email" id="ratio-email">E-mail</label>
-					
+.produtos li {
+	display: inline-block;
+	text-align: center;
+	width: 30%;
+	vertical-align: top;
+	margin: 0 1.5%;
+	padding: 30px 20px;
+	box-sizing: border-box;
+	border: 2px solid #000000;
+	border-radius: 10px;
+}
 
-					<label  for="ratio-telefone"><input type="radio" name="contato" value="Telefone" id="ratio-telefone">Telefone</label>
-					
+.produtos li:hover {
+	border-color: #C78C19;
+}
 
-					<label  for="ratio-whatsapp" checked><input type="radio" name="contato" value="whatsapp" id="ratio-whatsapp">WhatsAPP</label>
-					
+.produtos li:active {
+	border-color: #088C19;	
+}
 
-				</fieldset>
+.produtos li:hover h2 {
+	font-size: 34px;
+}
 
-				<fieldset>
-					<legend>Qual horário prefere ser atendido?</legend>
-					<select>
-						<option>Manhã</option>
-						<option>Tarde</option>
-						<option>Noite</option>
-					</select>
-				</fieldset>
+.produtos h2 {
+	font-size: 30px;
+	font-weight: bold;
+}
 
-				<label class="checkbox"><input type='checkbox' checked>Gostaria de receber nossas novidades por e-mail? </label>
+.produto-descricao {
+	font-size: 18px;
+}
+
+.produto-preco {
+	font-size: 22px;
+	font-weight: bold;
+	margin-top: 10px;
+}
+
+footer {
+	text-align: center;
+	background: url("bg.jpg");
+	padding: 40px 0;
+}
+
+.copyright {
+	color: #FFFFFF;
+	font-size: 13px;
+	margin: 20px 0 0;
+}
+
+/* Página de contato */
+.contato {
+	width: 940px;
+	margin: 40px auto;
+}
+
+.contato label, .input-group legend {
+	display: block;
+	margin: 0 0 5px;
+	font-size: 20px;
+}
+
+.campo-padrao, textarea {
+	display: block;
+	margin: 0 0 30px;
+	padding: 10px 20px;
+	width: 50%;
+	border: 1px solid #aaa;
+}
+
+.input-group {
+	margin: 0 0 20px;
+}
+
+.newsletter {
+	margin: 0 0 20px;
+}
+
+.botao {
+	margin: 20px 0 0;
+	width: 30%;
+	padding: 10px 20px;
+	font-size: 24px;
+	display: inline-block;
+	background: orange;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	transition: 1s;
+}
+
+.botao:hover {
+	cursor: pointer;
+	transform: scale(1.2);	
+}
+
+.funcionamento {
+	width: 940px;
+	margin: 0 auto 40px;
+}
+
+table {
+	margin: 10px 0 0;
+}
+
+th  {
+	background: #777777;
+	color: #FFFFFF;
+}
 
 
-				<input type="submit" value="Enviar Formulário" class="enviar">
+td, th {
+	border: 1px solid #000000;
+	padding: 5px 20px;
+}
 
-			</form>
+main {
+	width: 940px;
+	margin:  0 auto;
+}
 
-			<table>
-				<thread>
-					<tr>
-						<th>Dia</th>
-						<th>Horario</th>
-					</tr>
-				</thread>
-				<tbody>
-					<tr>
-						<td>Segunda</td>
-						<td>08:00 - 20:00</td>
-					</tr>
-					<tr>
-						<td>Quarta</td>
-						<td>08:00 - 20:00</td>
-					</tr>
-					<tr>
-						<td>Sexta</td>
-						<td>08:00 - 20:00</td>
-					</tr>
-				</tbody>
-			</table>
-		</main>
-				<footer>
-			<img src="logo-branco.png" alt="logo da Barbearia Alura">
-			<p class="copyright">&copy; Copyright Barbearia Alura - 2019</p>
-		</footer>
+form {
+	margin:  40px 0;
+}
+
+form label, form legend {
+	display:  block;
+	margin:  0 0 20px;
+
+}
+
+/*form input, form textarea {
+	display : block;
+	margin:  0 0 20px;
+	padding:  10px 20px;
+	width: 50%;
+}*/
+
+.input-padrao {
+	display : block;
+	margin :  0 0 20px;
+	padding : 10px 20px;
+	width : 50%;
+}
+
+.checkbox {
+	margin : 20px 20px;
+}
+
+.enviar {
+	width: 30%;
+	padding : 15px 0;
+	background: orange;
+	color : white;
+	font-weight: bold;
+	font-size: 18px;
+	border: none;
+	border-radius: 5px;
+	transition: 1s all;
+	cursor:  pointer;
+}
+
+.enviar:hover {
+	background: darkorange;
+	transform: scale(1.1);
+/*	transform: rotate(10deg);*/
+}
+
+
+table {
+	margin: 20px 0 40px;
+
+}
+
+thead {
+	background: #555555;
+	color : white;
+	font-weight: bold;
+}
+
+td, th {
+	
+	padding:  8px 15px;
+
+
+}
+
+
+
+
+
+
+
