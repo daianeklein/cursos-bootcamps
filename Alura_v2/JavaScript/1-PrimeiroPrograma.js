@@ -23,14 +23,14 @@ console.log("2" - "1")
 
 
 //concatenando strings
-const nome = "Daiane"
-const sobrenome = "Klein"
-console.log(`Meu nome é ${nome} ${sobrenome}`)
+const nome = "Daiane";
+const sobrenome = "Klein";
+console.log(`Meu nome é ${nome} ${sobrenome}`);
 
 
 //Alterando constante para variáveis
-let nome1 = "Daiane"
-const sobrenome1 = "Klein"
+let nome1 = "Daiane";
+const sobrenome1 = "Klein";
 
-nome1 = nome1 + ' ' + sobrenome1
-console.log(nome1)
+nome1 = nome1 + ' ' + sobrenome1;
+console.log(nome1);
