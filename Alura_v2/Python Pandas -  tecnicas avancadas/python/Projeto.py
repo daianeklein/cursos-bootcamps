@@ -364,7 +364,6 @@ texto
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.str.html)
 
-# In[ ]:
 
 
 texto.str
@@ -375,7 +374,6 @@ texto.str
 texto.str[1:-1]
 
 
-# In[ ]:
 
 
 #texto.str[1:-1].replace("'", '')
@@ -444,10 +442,9 @@ dados_normal_listings.loc[0, 'imovel_caracteristicas_propriedade']
 
 # ---
 
-# In[ ]:
 
 
-
+dados_normal_listings.columns == dados_highlights_listings.columns
 
 
 # In[ ]:
@@ -474,28 +471,24 @@ dados_normal_listings.loc[0, 'imovel_caracteristicas_propriedade']
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.append.html)
 
-# In[ ]:
+
+
+dados_normal_listings.append(dados_highlights_listings)
 
 
 
 
-
-# In[ ]:
-
+dados_normal_listings.append(dados_highlights_listings, ignore_index = True)
 
 
 
 
-# In[ ]:
+dados_listings = dados_normal_listings.append(dados_highlights_listings, ignore_index = True)
 
 
 
 
-
-# In[ ]:
-
-
-
+dados_listings.head()
 
 
 
@@ -508,16 +501,14 @@ dados_normal_listings.loc[0, 'imovel_caracteristicas_propriedade']
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.concat.html)
 
-# In[ ]:
+
+
+dados_listings = pd.concat([dados_normal_listings, dados_highlights_listings], ignore_index = True)
 
 
 
 
-
-# In[ ]:
-
-
-
+dados_listings.head()
 
 
 
@@ -556,18 +547,18 @@ dados_normal_listings.loc[0, 'imovel_caracteristicas_propriedade']
 # COMMAND ----------
 
 
-# In[ ]:
 
 
-
+bairros_amostra = dados_listings['imovel_endereco_bairro']
+bairros_amostra
 
 
 # [Documentação: `get_level_values`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.MultiIndex.get_level_values.html)
 
-# In[ ]:
 
 
-
+bairros_todos = bairros.index.get_level_values('bairros')
+bairros_todos
 
 
 
@@ -582,54 +573,38 @@ dados_normal_listings.loc[0, 'imovel_caracteristicas_propriedade']
 # 
 # [Documentação: `unique`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.unique.html)
 
-# In[ ]:
+
+
+bairros_amostra.nunique()
 
 
 
 
-
-# In[ ]:
-
+bairros_amostra.unique()
 
 
 
 
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
+bairros_amostra = pd.Series(bairros_amostra.unique())
+bairros_amostra
 
 
 # ---
 
-# In[ ]:
+
+
+bairros_todos.shape
 
 
 
 
-
-# In[ ]:
-
+bairros_todos.nunique()
 
 
 
 
-# In[ ]:
-
-
-
+bairros_todos = pd.Series(bairros_todos.unique())
+bairros_todos
 
 
 
@@ -642,28 +617,19 @@ dados_normal_listings.loc[0, 'imovel_caracteristicas_propriedade']
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.isin.html)
 
-# In[ ]:
+
+
+bairros_amostra.isin(bairros_todos)
 
 
 
 
-
-# In[ ]:
-
+bairros.loc['Freguesia']
 
 
 
 
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
+bairros.loc['Jacarepaguá']
 
 
 
@@ -676,22 +642,20 @@ dados_normal_listings.loc[0, 'imovel_caracteristicas_propriedade']
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.replace.html)
 
-# In[ ]:
+
+
+dados_listings['imovel_endereco_bairro'].replace('Freguesia (Jacarepaguá)', 'Freguesia', inplace = True)
 
 
 
 
-
-# In[ ]:
-
-
+bairros_amostra = pd.Series(dados_listings['imovel_endereco_bairro'].unique())
+bairros_amostra
 
 
 
-# In[ ]:
 
-
-
+bairros_amostra.isin(bairros_todos)
 
 
 
@@ -760,6 +724,22 @@ dados_normal_listings.loc[0, 'imovel_caracteristicas_propriedade']
 # - **right_index**: bool, *default False*
 # 
 #         Indica se o índice do DataFrame especificado no parâmetro right deve ser utilizado como chave de junção.
+
+
+
+dados_listings[['imovel_endereco_bairro', 'imovel_tipos_propriedade']]
+
+
+
+
+dados_listings = pd.merge(
+    left= dados_listings,
+    right = bairros,
+    left_on = ['imovel_endereco_bairro', 'imovel_tipos_propriedade'],
+    right_index = True)
+
+dados_listings
+
 
 # In[ ]:
 
@@ -868,7 +848,6 @@ dados_normal_listings.loc[0, 'imovel_caracteristicas_propriedade']
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.map.html)
 
-# In[ ]:
 
 
 tipo_uso = {
@@ -1645,7 +1624,6 @@ tipo_uso = {
 # 
 # [Documentação](https://matplotlib.org/3.3.2/tutorials/colors/colormaps.html)
 
-# In[ ]:
 
 
 import numpy as np
@@ -1657,7 +1635,6 @@ from collections import OrderedDict
 cmaps = OrderedDict()
 
 
-# In[ ]:
 
 
 cmaps['Perceptually Uniform Sequential'] = [
@@ -1690,7 +1667,6 @@ cmaps['Miscellaneous'] = [
             'gist_ncar']
 
 
-# In[ ]:
 
 
 nrows = max(len(cmap_list) for cmap_category, cmap_list in cmaps.items())
