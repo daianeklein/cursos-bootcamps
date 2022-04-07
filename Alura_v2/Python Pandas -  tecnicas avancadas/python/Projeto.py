@@ -741,12 +741,6 @@ dados_listings = pd.merge(
 dados_listings
 
 
-# In[ ]:
-
-
-
-
-
 
 # COMMAND ----------
 
@@ -764,10 +758,9 @@ dados_listings
 # COMMAND ----------
 
 
-# In[ ]:
 
 
-
+dados_listings['anuncio_descricao'].head()
 
 
 
@@ -780,10 +773,10 @@ dados_listings
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.str.extractall.html)
 
-# In[ ]:
 
 
-
+configuracao = dados_listings['anuncio_descricao'].str.extractall('(\d+)')
+configuracao.head(9)
 
 
 
@@ -796,16 +789,18 @@ dados_listings
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.unstack.html)
 
-# In[ ]:
+
+
+configuracao = configuracao.unstack().rename(columns={0:'quartos',
+                                      1: 'suites',
+                                      2: 'banheiros'})
+
+configuracao.head(9)
 
 
 
 
-
-# In[ ]:
-
-
-
+configuracao.columns
 
 
 
@@ -818,16 +813,20 @@ dados_listings
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.droplevel.html)
 
-# In[ ]:
+
+
+configuracao = configuracao.droplevel(level=0, axis = 1)
 
 
 
 
-
-# In[ ]:
-
+configuracao.head(9)
 
 
+
+
+dados_listings = pd.merge(dados_listings, configuracao, left_index = True, right_index = True)
+dados_listings.head()
 
 
 
