@@ -863,13 +863,12 @@ tipo_uso = {
 # In[ ]:
 
 
+dados_listings.imovel_tipos_propriedade.map(tipo_uso)
 
 
 
-# In[ ]:
 
-
-
+imovel_tipos_uso = dados_listings.imovel_tipos_propriedade.map(tipo_uso)
 
 
 
@@ -882,16 +881,14 @@ tipo_uso = {
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.insert.html)
 
-# In[ ]:
+
+
+dados_listings.insert(loc=0, column='imovel_tipo_uso', value = imovel_tipos_uso)
 
 
 
 
-
-# In[ ]:
-
-
-
+dados_listings.head()
 
 
 
@@ -905,6 +902,21 @@ tipo_uso = {
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.cut.html)
 
 
+
+valor_minimo = dados_listings['anuncio_valores_venda'].min()
+
+
+
+
+valor_maximo = dados_listings['anuncio_valores_venda'].max()
+
+
+
+
+rotulos =['Popular', 'Padrao', 'Alto Padrao']
+
+
+
 # COMMAND ----------
 
 # MAGIC %md #### Utilizando classes fixas
@@ -912,40 +924,9 @@ tipo_uso = {
 # COMMAND ----------
 
 
-# In[ ]:
 
 
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
+pd.cut(x=dados_listings['anuncio_valores_venda'], bins = 3, labels = rotulos) #3 classes
 
 
 
@@ -956,28 +937,26 @@ tipo_uso = {
 # COMMAND ----------
 
 
-# In[ ]:
+
+
+# é preciso N pontos para obter N - 1 classes
+# para criar 3 classes, são necessários três pontos
+classes = [valor_minimo, 400000, 2000000, valor_maximo]
 
 
 
 
-
-# In[ ]:
-
+pd.cut(x=dados_listings['anuncio_valores_venda'], bins = classes, labels = rotulos, include_lowest = True) 
 
 
 
 
-# In[ ]:
+dados_listings['classe_valor'] = pd.cut(x=dados_listings['anuncio_valores_venda'], bins = classes, labels = rotulos, include_lowest = True) 
 
 
 
 
-
-# In[ ]:
-
-
-
+dados_listings.head()
 
 
 
@@ -996,16 +975,14 @@ tipo_uso = {
 # COMMAND ----------
 
 
-# In[ ]:
+
+
+dados_listings['valor_m2'] = dados_listings['anuncio_valores_venda'] / dados_listings['imovel_area']
 
 
 
 
-
-# In[ ]:
-
-
-
+dados_listings[['anuncio_valores_venda', 'imovel_area', 'valor_m2']].iloc[16:19]
 
 
 
@@ -1018,22 +995,19 @@ tipo_uso = {
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.apply.html)
 
-# In[ ]:
+
+
+valor_m2 = lambda x: x['anuncio_valores_venda'] / x['imovel_area'] if x['imovel_area'] != 0 else 0
 
 
 
 
-
-# In[ ]:
-
+dados_listings['valor_m2'] = dados_listings.apply(valor_m2, axis = 1)
 
 
 
 
-# In[ ]:
-
-
-
+dados_listings[['anuncio_valores_venda', 'imovel_area', 'valor_m2']].iloc[16:19]
 
 
 
@@ -1044,10 +1018,14 @@ tipo_uso = {
 # COMMAND ----------
 
 
-# In[ ]:
+
+
+dados_listings['piscina'] = dados_listings['imovel_caracteristicas_condominio'].apply(lambda x: 'Piscina' in x)
 
 
 
+
+dados_listings[['imovel_caracteristicas_condominio', 'piscina']].sample(10)
 
 
 
