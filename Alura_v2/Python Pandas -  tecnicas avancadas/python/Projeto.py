@@ -860,7 +860,6 @@ tipo_uso = {
 }
 
 
-# In[ ]:
 
 
 dados_listings.imovel_tipos_propriedade.map(tipo_uso)
@@ -1045,12 +1044,6 @@ dados_listings[['imovel_caracteristicas_condominio', 'piscina']].sample(10)
 # COMMAND ----------
 
 
-# In[ ]:
-
-
-
-
-
 
 # COMMAND ----------
 
@@ -1061,16 +1054,14 @@ dados_listings[['imovel_caracteristicas_condominio', 'piscina']].sample(10)
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.aggregate.html)
 
-# In[ ]:
+
+
+dados_listings[['anuncio_valores_venda', 'anuncio_valores_condominio', 'anuncio_valores_iptu']].aggregate(['sum','mean', 'std'])
 
 
 
 
-
-# In[ ]:
-
-
-
+dados_listings[['anuncio_valores_venda', 'anuncio_valores_condominio', 'anuncio_valores_iptu']].agg(['sum','mean', 'std'])
 
 
 
@@ -1083,40 +1074,34 @@ dados_listings[['imovel_caracteristicas_condominio', 'piscina']].sample(10)
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.groupby.html)
 
-# In[ ]:
+
+
+grupamento = dados_listings[['imovel_tipos_propriedade', 'valor_m2']].groupby('imovel_tipos_propriedade')
 
 
 
 
-
-# In[ ]:
-
+grupamento.mean()
 
 
 
 
-# In[ ]:
+grupamento.agg(func=['min', 'mean', 'max', 'std'])
 
 
 
 
-
-# In[ ]:
-
+grupamento = dados_listings[['imovel_tipos_propriedade', 'classe_valor','valor_m2']]     .groupby(['imovel_tipos_propriedade', 'classe_valor'])
 
 
 
 
-# In[ ]:
+grupamento.mean().round()
 
 
 
 
-
-# In[ ]:
-
-
-
+grupamento.agg(func=['min', 'mean', 'max', 'std'])
 
 
 
@@ -1129,22 +1114,19 @@ dados_listings[['imovel_caracteristicas_condominio', 'piscina']].sample(10)
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.value_counts.html)
 
-# In[ ]:
+
+
+dados_listings.value_counts(subset='imovel_tipos_propriedade')
 
 
 
 
-
-# In[ ]:
-
+dados_listings.value_counts(subset='imovel_tipos_propriedade', normalize = True)
 
 
 
 
-# In[ ]:
-
-
-
+dados_listings.value_counts(subset=['imovel_tipos_propriedade', 'classe_valor'])
 
 
 
@@ -1157,10 +1139,9 @@ dados_listings[['imovel_caracteristicas_condominio', 'piscina']].sample(10)
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.to_frame.html)
 
-# In[ ]:
 
 
-
+dados_listings.value_counts(subset=['imovel_tipos_propriedade', 'classe_valor'], normalize = True)     .to_frame('percentual') * 100
 
 
 
@@ -1183,22 +1164,19 @@ dados_listings[['imovel_caracteristicas_condominio', 'piscina']].sample(10)
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.unstack.html)
 
-# In[ ]:
+
+
+bairros.head()
 
 
 
 
-
-# In[ ]:
-
+bairros.unstack(level = -1)
 
 
 
 
-# In[ ]:
-
-
-
+bairros.unstack(level = 0)
 
 
 
@@ -1213,22 +1191,21 @@ dados_listings[['imovel_caracteristicas_condominio', 'piscina']].sample(10)
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.stack.html)
 
-# In[ ]:
+
+
+grupamento = dados_listings[['imovel_tipos_propriedade', 'classe_valor','valor_m2']]     .groupby(['imovel_tipos_propriedade', 'classe_valor'])
 
 
 
 
-
-# In[ ]:
-
-
+tabelas_estatisticas = grupamento.agg(func=['min', 'mean', 'max', 'std'])
+tabelas_estatisticas
 
 
 
-# In[ ]:
 
-
-
+tabelas_estatisticas.stack(dropna = False) 
+tabelas_estatisticas
 
 
 # In[ ]:
