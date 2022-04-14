@@ -1232,10 +1232,12 @@ tabelas_estatisticas
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.pivot.html)
 
-# In[ ]:
 
 
+grupamentos = dados_listings[['imovel_tipos_propriedade', 'classe_valor', 'valor_m2']]     .groupby(by=['imovel_tipos_propriedade', 'classe_valor'])
 
+tabelas_estatisticas = grupamento.agg(func = ['min', 'mean', 'max', 'std']).round(2)
+tabelas_estatisticas
 
 
 
@@ -1248,10 +1250,10 @@ tabelas_estatisticas
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.droplevel.html)
 
-# In[ ]:
 
 
-
+tabelas_estatisticas = tabelas_estatisticas.droplevel(level = 0, axis = 'columns')
+tabelas_estatisticas
 
 
 
@@ -1264,16 +1266,18 @@ tabelas_estatisticas
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.reset_index.html)
 
-# In[ ]:
+
+
+tabelas_estatisticas = tabelas_estatisticas.reset_index()
+tabelas_estatisticas
 
 
 
 
-
-# In[ ]:
-
-
-
+tabelas_estatisticas.pivot(
+    index = 'imovel_tipos_propriedade',
+    columns = 'classe_valor',
+    values = 'mean')
 
 
 
@@ -1286,22 +1290,29 @@ tabelas_estatisticas
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.pivot_table.html)
 
-# In[ ]:
+
+
+dados_listings.pivot_table(
+    values = 'valor_m2',
+    index = 'imovel_tipos_propriedade',
+    columns = 'classe_valor',
+    fill_value = '-',
+    margins = True,
+    margins_name = 'Media Geral',
+    aggfunc = 'mean')
 
 
 
 
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
+dados_listings.pivot_table(
+    values = 'valor_m2',
+    index = ['imovel_tipos_propriedade', 'classe_valor'],
+    columns = ['anuncio_tipos_listagem', 'piscina'],
+    fill_value = '-',
+    margins = True,
+    margins_name = 'Media Geral',
+    aggfunc = 'mean',
+    dropna = False)
 
 
 
@@ -1331,22 +1342,31 @@ tabelas_estatisticas
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.explode.html)
 
-# In[ ]:
+
+
+caracteristica_propriedade = dados_listings['imovel_caracteristicas_propriedade']
+caracteristica_propriedade
 
 
 
 
-
-# In[ ]:
-
-
+caracteristica_propriedade = caracteristica_propriedade.explode()
+caracteristica_propriedade
 
 
 
-# In[ ]:
+
+caracteristica_propriedade.value_counts()
 
 
 
+
+pd.merge(
+    left = caracteristica_propriedade.value_counts(),
+    right = caracteristica_propriedade.value_counts(normalize = True),
+    left_index = True,
+    right_index = True
+)
 
 
 
@@ -1359,16 +1379,22 @@ tabelas_estatisticas
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.where.html)
 
-# In[ ]:
+
+
+caracteristica_propriedade.where(
+    cond = caracteristica_propriedade!='',
+    other = 'Sem caracteristicas',
+    inplace = True)
 
 
 
 
-
-# In[ ]:
-
-
-
+pd.merge(
+    left = caracteristica_propriedade.value_counts(),
+    right = caracteristica_propriedade.value_counts(normalize = True),
+    left_index = True,
+    right_index = True
+)
 
 
 
@@ -1389,22 +1415,32 @@ tabelas_estatisticas
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.style.html)
 
-# In[ ]:
+
+
+tabela_frequencias = pd.merge(
+    left = caracteristica_propriedade.value_counts(sort = False),
+    right = caracteristica_propriedade.value_counts(normalize = True, sort = False),
+    left_index = True,
+    right_index = True
+)
+
+tabela_frequencias
 
 
 
 
-
-# In[ ]:
-
+tabela_frequencias.query("index != 'Sem caracteristicas'", inplace = True)
 
 
 
 
-# In[ ]:
+tabela_frequencias.rename(columns = {
+    'imovel_caracteristicas_propriedade_x' : 'Frequencias',
+    'imovel_caracteristicas_propriedade_y' : 'Percentual'}, inplace = True)
 
+tabela_frequencias.rename_axis('caracteristicas', inplace = True)
 
-
+tabela_frequencias
 
 
 
@@ -1417,10 +1453,9 @@ tabelas_estatisticas
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.io.formats.style.Styler.format.html)
 
-# In[ ]:
 
 
-
+tabela_frequencias.style.format({'Percentual' : '{:.2%}'})
 
 
 
@@ -1433,10 +1468,11 @@ tabelas_estatisticas
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.io.formats.style.Styler.bar.html)
 
-# In[ ]:
 
 
+vmin = tabela_frequencias['Percentual'].min()
 
+tabela_frequencias.style.format({'Percentual' : '{:.2%}'})     .bar(subset = 'Percentual', vmin=vmin, color = 'lightblue')
 
 
 
@@ -1449,10 +1485,18 @@ tabelas_estatisticas
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.io.formats.style.Styler.applymap.html)
 
-# In[ ]:
+
+
+vmin = tabela_frequencias['Percentual'].min()
+
+tabela_frequencias.style.format({'Percentual' : '{:.2%}'})     .bar(subset = 'Percentual', vmin=vmin, color = 'lightblue')     .applymap(lambda x: f"color : {'red' if x >= 35 else 'black'}", subset ='Frequencias')
 
 
 
+
+vmin = tabela_frequencias['Percentual'].min()
+
+tabela_frequencias.style.format({'Percentual' : '{:.2%}'})     .bar(subset = 'Percentual', vmin=vmin, color = 'lightblue')     .applymap(lambda x: f"color : {'red' if x >= 35 else 'black'}", subset ='Frequencias')     .applymap(lambda x: f"font-weight : {'bold' if x >= 35 else 'normal'}", subset ='Frequencias')
 
 
 # In[ ]:
@@ -1473,46 +1517,36 @@ tabelas_estatisticas
 # 
 # [Documentação: `highlight_min`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.io.formats.style.Styler.highlight_min.html)
 
-# In[ ]:
+
+
+bairros
 
 
 
 
-
-# In[ ]:
-
+bairros.unstack()
 
 
 
 
-# In[ ]:
+bairros_zona_sul = ['Ipanema', 'Botafogo', 'Catete', 'Copacabana', 'Lagoa', 'Flamengo', 'Gávea',
+                   'Glória', 'Leme', 'Urca', 'Leblon']
 
 
 
 
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
+tabela_zona_sul = bairros.unstack().query("index in " + str(bairros_zona_sul)).droplevel(level = 0, axis = 1)
+tabela_zona_sul
 
 
 
 
-
-# In[ ]:
-
+tabela_zona_sul.style.format('R$ {:,.2f}')     .highlight_max(color = 'lightgreen')     .highlight_min(color = '#C26161')
 
 
 
 
-# In[ ]:
-
-
-
+tabela_zona_sul
 
 
 
@@ -1525,16 +1559,14 @@ tabelas_estatisticas
 # 
 # [Documentação](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.io.formats.style.Styler.background_gradient.html)
 
-# In[ ]:
+
+
+tabela_zona_sul[['Apartamento']].style     .format('R$ {:,.2f}')     .background_gradient(cmap = 'Reds')
 
 
 
 
-
-# In[ ]:
-
-
-
+tabela_zona_sul.style     .format('R$ {:,.2f}')     .background_gradient(subset = ['Apartamento'], cmap = 'Reds')     .background_gradient(subset = ['Cobertura'], cmap = 'Blues')
 
 
 # In[ ]:
