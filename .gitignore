@@ -131,6 +131,7 @@ dmypy.json
 # csv files
 *.csv
 
-*notebook config
+#notebook config
 .DS_Store
 .ipynb_checkpoints
+.ipynb_checkpoints/
