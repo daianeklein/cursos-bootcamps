@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# csv files
+*.csv
+
+*notebook config
+.DS_Store
