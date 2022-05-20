@@ -133,3 +133,4 @@ dmypy.json
 
 *notebook config
 .DS_Store
+.ipynb_checkpoints
