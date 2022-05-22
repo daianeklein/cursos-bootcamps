@@ -48,10 +48,24 @@
 # COMMAND ----------
 
 
-# In[ ]:
 
 
+import numpy as np
+import pandas as pd
+import scipy
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set()
+
+from sklearn.preprocessing import StandardScaler
+
+from scipy.cluster.hierarchy import dendrogram, linkage
+from sklearn.cluster import KMeans
+
+from sklearn.decomposition import PCA
+
+import pickle
 
 
 
@@ -62,6 +76,160 @@
 # COMMAND ----------
 
 
+
+
+df_segmentation = pd.read_csv('data.csv')
+
+
+
+# COMMAND ----------
+
+# MAGIC %md # Analysis
+
+# COMMAND ----------
+
+
+
+
+df_segmentation.head()
+
+
+
+
+df_segmentation.describe()
+
+
+
+# COMMAND ----------
+
+# MAGIC %md ### Correlation
+
+# COMMAND ----------
+
+
+
+
+df_segmentation.corr()
+
+
+
+
+plt.figure(figsize = (12, 9))
+s = sns.heatmap(df_segmentation.corr(),
+               annot = True, 
+               cmap = 'RdBu',
+               vmin = -1, 
+               vmax = 1)
+s.set_yticklabels(s.get_yticklabels(), rotation = 0, fontsize = 12)
+s.set_xticklabels(s.get_xticklabels(), rotation = 90, fontsize = 12)
+plt.title('Correlation Heatmap')
+plt.show()
+
+
+
+
+# raw data
+plt.figure(figsize = (12, 9))
+plt.scatter(df_segmentation['Age'], df_segmentation['Income'])
+plt.xlabel('Age')
+plt.ylabel('Income')
+plt.title('Visualization of raw data')
+
+
+
+# COMMAND ----------
+
+# MAGIC %md ## Standardization
+
+# COMMAND ----------
+
+
+
+
+scaler = StandardScaler()
+segmentation_std = scaler.fit_transform(df_segmentation)
+
+
+
+# COMMAND ----------
+
+# MAGIC %md ## Hierarquical Clustering
+
+# COMMAND ----------
+
+
+
+
+hier_clust = linkage(segmentation_std, method = 'ward')
+
+
+
+
+plt.figure(figsize = (12,9))
+plt.title('Hierarchical Clustering Dendrogram')
+plt.xlabel('Observations')
+plt.ylabel('Distance')
+dendrogram(hier_clust,
+           truncate_mode = 'level',
+           p = 5,
+           show_leaf_counts = False,
+           no_labels = True)
+plt.show()
+
+
+
+# COMMAND ----------
+
+# MAGIC %md ## K-means Clustering
+
+# COMMAND ----------
+
+
+
+
+wcss = []
+
+for i in range(1, 11):
+    kmeans = KMeans(n_clusters = i, init = 'k-means++', random_state = 42)
+    kmeans.fit(segmentation_std)
+    wcss.append(kmeans.inertia_)
+
+
+
+
+wcss
+
+
+
+
+plt.figure(figsize = (10,8))
+plt.plot(range(1, 11), wcss, marker = 'o', linestyle = '--')
+plt.xlabel('Number of Clusters')
+plt.ylabel('WCSS')
+plt.title('K-means Clustering')
+plt.show()
+
+
+
+
+kmeans = KMeans(n_clusters = 4, init = 'k-means++', random_state = 42)
+kmeans.fit(segmentation_std)
+
+
+
+# COMMAND ----------
+
+# MAGIC %md ### Results
+
+# COMMAND ----------
+
+
+# In[ ]:
+
+
+
+
+
 # In[ ]:
 
 
@@ -71,7 +239,7 @@
 
 # COMMAND ----------
 
-# MAGIC %md # Analysis
+# MAGIC %md # PCA
 
 # COMMAND ----------
 
