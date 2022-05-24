@@ -224,16 +224,64 @@ kmeans.fit(segmentation_std)
 # COMMAND ----------
 
 
-# In[ ]:
+
+
+kmeans.labels_
 
 
 
 
-
-# In[ ]:
-
+set(kmeans.labels_)
 
 
+
+
+df_segm_kmeans = df_segmentation.copy()
+df_segm_kmeans['Segment K-means'] = kmeans.labels_
+
+
+
+
+df_segm_analysis = df_segm_kmeans.groupby(['Segment K-means']).mean()
+df_segm_analysis
+
+
+
+
+df_segm_analysis['N Obs'] = df_segm_kmeans[['Segment K-means','Sex']].groupby(['Segment K-means']).count()
+df_segm_analysis['Prop Obs'] = df_segm_analysis['N Obs'] / df_segm_analysis['N Obs'].sum()
+
+
+
+
+df_segm_analysis
+
+
+
+
+# rename cluster
+df_segm_analysis.rename({0:'well-off',
+                         1:'fewer-opportunities',
+                         2:'standard',
+                         3:'career focused'})
+
+
+
+
+df_segm_kmeans['Labels'] = df_segm_kmeans['Segment K-means'].map({0:'well-off', 
+                                                                  1:'fewer opportunities',
+                                                                  2:'standard', 
+                                                                  3:'career focused'})
+
+
+
+
+x_axis = df_segm_kmeans['Age']
+y_axis = df_segm_kmeans['Income']
+plt.figure(figsize = (10, 8))
+sns.scatterplot(x = x_axis, y = y_axis, hue = df_segm_kmeans['Labels'], palette = ['g', 'r', 'c', 'm'])
+plt.title('Segmentation K-means')
+plt.show()
 
 
 
