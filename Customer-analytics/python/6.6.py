@@ -5,45 +5,7 @@
 
 # COMMAND ----------
 
-# MAGIC %md # CUSTOMER ANALYTICS
-
-# COMMAND ----------
-
-
-# - Master beginner and advanced customer analytics
-# 
-# - Learn the most important type of analysis applied by mid and large companies
-# 
-# - Gain access to a professional team of trainers with exceptional quant skills
-# 
-# - Wow interviewers by acquiring a highly desired skill
-# 
-# - Understand the fundamental marketing modeling theory: segmentation, targeting, positioning, marketing mix, and price elasticity;
-# 
-# - Apply segmentation on your customers, starting from raw data and reaching final customer segments;
-# 
-# - Perform K-means clustering with a customer analytics focus;
-# 
-# - Apply Principal Components Analysis (PCA) on your data to preprocess your features;
-# 
-# - Combine PCA and K-means for even more professional customer segmentation;
-# 
-# - Deploy your models on a different dataset;
-# 
-# - Learn how to model purchase incidence through probability of purchase elasticity;
-# 
-# - Model brand choice by exploring own-price and cross-price elasticity;
-# 
-# - Complete the purchasing cycle by predicting purchase quantity elasticity
-# 
-# - Carry out a black box deep learning model with TensorFlow 2.0 to predict purchasing behavior with unparalleled accuracy
-# 
-# - Be able to optimize your neural networks to enhance results
-
-
-# COMMAND ----------
-
-# MAGIC %md # Libs
+# MAGIC %md ## ${\textbf{Libraries}}$
 
 # COMMAND ----------
 
@@ -71,20 +33,20 @@ import pickle
 
 # COMMAND ----------
 
-# MAGIC %md # Dataset
+# MAGIC %md ## ${\textbf{Import Data}}$
 
 # COMMAND ----------
 
 
 
 
-df_segmentation = pd.read_csv('data.csv')
+df_segmentation = pd.read_csv('new-notebook/data.csv')
 
 
 
 # COMMAND ----------
 
-# MAGIC %md # Analysis
+# MAGIC %md ## ${\textbf{Explore Data}}$
 
 # COMMAND ----------
 
@@ -102,7 +64,7 @@ df_segmentation.describe()
 
 # COMMAND ----------
 
-# MAGIC %md ### Correlation
+# MAGIC %md ## ${\textbf{Correlation Estimate}}$
 
 # COMMAND ----------
 
@@ -127,10 +89,17 @@ plt.show()
 
 
 
+# COMMAND ----------
 
-# raw data
+# MAGIC %md ## ${\textbf{Visualize Raw Data}}$
+
+# COMMAND ----------
+
+
+
+
 plt.figure(figsize = (12, 9))
-plt.scatter(df_segmentation['Age'], df_segmentation['Income'])
+plt.scatter(df_segmentation.iloc[:, 2], df_segmentation.iloc[:, 4])
 plt.xlabel('Age')
 plt.ylabel('Income')
 plt.title('Visualization of raw data')
@@ -139,7 +108,7 @@ plt.title('Visualization of raw data')
 
 # COMMAND ----------
 
-# MAGIC %md ## Standardization
+# MAGIC %md ## ${\textbf{Standardization}}$
 
 # COMMAND ----------
 
@@ -153,7 +122,7 @@ segmentation_std = scaler.fit_transform(df_segmentation)
 
 # COMMAND ----------
 
-# MAGIC %md ## Hierarquical Clustering
+# MAGIC %md ## ${\textbf{Hierarchical Clustering}}$
 
 # COMMAND ----------
 
@@ -180,7 +149,7 @@ plt.show()
 
 # COMMAND ----------
 
-# MAGIC %md ## K-means Clustering
+# MAGIC %md ## ${\textbf{K-means Clustering}}$
 
 # COMMAND ----------
 
@@ -188,16 +157,10 @@ plt.show()
 
 
 wcss = []
-
-for i in range(1, 11):
+for i in range(1,11):
     kmeans = KMeans(n_clusters = i, init = 'k-means++', random_state = 42)
     kmeans.fit(segmentation_std)
     wcss.append(kmeans.inertia_)
-
-
-
-
-wcss
 
 
 
@@ -213,25 +176,19 @@ plt.show()
 
 
 kmeans = KMeans(n_clusters = 4, init = 'k-means++', random_state = 42)
+
+
+
+
 kmeans.fit(segmentation_std)
 
 
 
 # COMMAND ----------
 
-# MAGIC %md ### Results
+# MAGIC %md ### ${\textbf{Results}}$
 
 # COMMAND ----------
-
-
-
-
-kmeans.labels_
-
-
-
-
-set(kmeans.labels_)
 
 
 
@@ -259,7 +216,6 @@ df_segm_analysis
 
 
 
-# rename cluster
 df_segm_analysis.rename({0:'well-off',
                          1:'fewer-opportunities',
                          2:'standard',
@@ -279,7 +235,7 @@ df_segm_kmeans['Labels'] = df_segm_kmeans['Segment K-means'].map({0:'well-off',
 x_axis = df_segm_kmeans['Age']
 y_axis = df_segm_kmeans['Income']
 plt.figure(figsize = (10, 8))
-sns.scatterplot(x = x_axis, y = y_axis, hue = df_segm_kmeans['Labels'], palette = ['g', 'r', 'c', 'm'])
+sns.scatterplot(x_axis, y_axis, hue = df_segm_kmeans['Labels'], palette = ['g', 'r', 'c', 'm'])
 plt.title('Segmentation K-means')
 plt.show()
 
@@ -287,7 +243,7 @@ plt.show()
 
 # COMMAND ----------
 
-# MAGIC %md # PCA
+# MAGIC %md ### ${\textbf{PCA}}$
 
 # COMMAND ----------
 
@@ -310,10 +266,10 @@ pca.explained_variance_ratio_
 
 
 plt.figure(figsize = (12,9))
-plt.plot(pca.explained_variance_ratio_.cumsum(), marker = 'o', linestyle = '--')
+plt.plot(range(1,8), pca.explained_variance_ratio_.cumsum(), marker = 'o', linestyle = '--')
 plt.title('Explained Variance by Components')
 plt.xlabel('Number of Components')
-plt.ylabel('Cumulative Explained Variance');
+plt.ylabel('Cumulative Explained Variance')
 
 
 
@@ -329,7 +285,7 @@ pca.fit(segmentation_std)
 
 # COMMAND ----------
 
-# MAGIC %md ## PCA RESULTS
+# MAGIC %md ### ${\textbf{PCA Results}}$
 
 # COMMAND ----------
 
@@ -357,7 +313,7 @@ sns.heatmap(df_pca_comp,
 plt.yticks([0, 1, 2], 
            ['Component 1', 'Component 2', 'Component 3'],
            rotation = 45,
-           fontsize = 9);
+           fontsize = 9)
 
 
 
@@ -373,7 +329,7 @@ scores_pca = pca.transform(segmentation_std)
 
 # COMMAND ----------
 
-# MAGIC %md ## K-Means clustering with PCA
+# MAGIC %md ### ${\textbf{K-means clustering with PCA}}$
 
 # COMMAND ----------
 
@@ -410,7 +366,7 @@ kmeans_pca.fit(scores_pca)
 
 # COMMAND ----------
 
-# MAGIC %md ## K-Means clustering with PCA
+# MAGIC %md ### ${\textbf{K-means clustering with PCA Results}}$
 
 # COMMAND ----------
 
@@ -457,7 +413,7 @@ df_segm_pca_kmeans['Legend'] = df_segm_pca_kmeans['Segment K-means PCA'].map({0:
 x_axis = df_segm_pca_kmeans['Component 2']
 y_axis = df_segm_pca_kmeans['Component 1']
 plt.figure(figsize = (10, 8))
-sns.scatterplot(x = x_axis, y= y_axis, hue = df_segm_pca_kmeans['Legend'], palette = ['g', 'r', 'c', 'm'])
+sns.scatterplot(x_axis, y_axis, hue = df_segm_pca_kmeans['Legend'], palette = ['g', 'r', 'c', 'm'])
 plt.title('Clusters by PCA Components')
 plt.show()
 
@@ -467,7 +423,7 @@ plt.show()
 x_axis_1 = df_segm_pca_kmeans['Component 3']
 y_axis_1 = df_segm_pca_kmeans['Component 1']
 plt.figure(figsize = (12, 9))
-sns.scatterplot(x = x_axis_1, y = y_axis_1, hue = df_segm_pca_kmeans['Legend'], palette = ['g', 'r', 'c', 'm'])
+sns.scatterplot(x_axis_1, y_axis_1, hue = df_segm_pca_kmeans['Legend'], palette = ['g', 'r', 'c', 'm'])
 plt.title('Clusters by PCA Components' )
 plt.show()
 
@@ -477,7 +433,7 @@ plt.show()
 x_axis_1 = df_segm_pca_kmeans['Component 3']
 y_axis_1 = df_segm_pca_kmeans['Component 2']
 plt.figure(figsize = (12, 9))
-sns.scatterplot(x = x_axis_1, y = y_axis_1, hue = df_segm_pca_kmeans['Legend'], palette = ['g', 'r', 'c', 'm'])
+sns.scatterplot(x_axis_1, y_axis_1, hue = df_segm_pca_kmeans['Legend'], palette = ['g', 'r', 'c', 'm'])
 plt.title('Clusters by PCA Components' )
 plt.show()
 
@@ -485,7 +441,7 @@ plt.show()
 
 # COMMAND ----------
 
-# MAGIC %md # DATA EXPORT
+# MAGIC %md ### ${\textbf{Data Export}}$
 
 # COMMAND ----------
 
