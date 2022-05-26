@@ -126,6 +126,7 @@ plt.title('Correlation Heatmap')
 plt.show()
 
 
+# In[ ]:
 
 
 # raw data
@@ -144,6 +145,7 @@ plt.title('Visualization of raw data')
 # COMMAND ----------
 
 
+# In[ ]:
 
 
 scaler = StandardScaler()
@@ -158,11 +160,13 @@ segmentation_std = scaler.fit_transform(df_segmentation)
 # COMMAND ----------
 
 
+# In[ ]:
 
 
 hier_clust = linkage(segmentation_std, method = 'ward')
 
 
+# In[ ]:
 
 
 plt.figure(figsize = (12,9))
@@ -185,6 +189,7 @@ plt.show()
 # COMMAND ----------
 
 
+# In[ ]:
 
 
 wcss = []
@@ -195,11 +200,13 @@ for i in range(1, 11):
     wcss.append(kmeans.inertia_)
 
 
+# In[ ]:
 
 
 wcss
 
 
+# In[ ]:
 
 
 plt.figure(figsize = (10,8))
@@ -210,6 +217,7 @@ plt.title('K-means Clustering')
 plt.show()
 
 
+# In[ ]:
 
 
 kmeans = KMeans(n_clusters = 4, init = 'k-means++', random_state = 42)
@@ -224,39 +232,46 @@ kmeans.fit(segmentation_std)
 # COMMAND ----------
 
 
+# In[ ]:
 
 
 kmeans.labels_
 
 
+# In[ ]:
 
 
 set(kmeans.labels_)
 
 
+# In[ ]:
 
 
 df_segm_kmeans = df_segmentation.copy()
 df_segm_kmeans['Segment K-means'] = kmeans.labels_
 
 
+# In[ ]:
 
 
 df_segm_analysis = df_segm_kmeans.groupby(['Segment K-means']).mean()
 df_segm_analysis
 
 
+# In[ ]:
 
 
 df_segm_analysis['N Obs'] = df_segm_kmeans[['Segment K-means','Sex']].groupby(['Segment K-means']).count()
 df_segm_analysis['Prop Obs'] = df_segm_analysis['N Obs'] / df_segm_analysis['N Obs'].sum()
 
 
+# In[ ]:
 
 
 df_segm_analysis
 
 
+# In[ ]:
 
 
 # rename cluster
@@ -266,6 +281,7 @@ df_segm_analysis.rename({0:'well-off',
                          3:'career focused'})
 
 
+# In[ ]:
 
 
 df_segm_kmeans['Labels'] = df_segm_kmeans['Segment K-means'].map({0:'well-off', 
@@ -274,6 +290,7 @@ df_segm_kmeans['Labels'] = df_segm_kmeans['Segment K-means'].map({0:'well-off',
                                                                   3:'career focused'})
 
 
+# In[ ]:
 
 
 x_axis = df_segm_kmeans['Age']
@@ -292,21 +309,25 @@ plt.show()
 # COMMAND ----------
 
 
+# In[ ]:
 
 
 pca = PCA()
 
 
+# In[ ]:
 
 
 pca.fit(segmentation_std)
 
 
+# In[ ]:
 
 
 pca.explained_variance_ratio_
 
 
+# In[ ]:
 
 
 plt.figure(figsize = (12,9))
@@ -316,11 +337,13 @@ plt.xlabel('Number of Components')
 plt.ylabel('Cumulative Explained Variance');
 
 
+# In[ ]:
 
 
 pca = PCA(n_components = 3)
 
 
+# In[ ]:
 
 
 pca.fit(segmentation_std)
@@ -334,11 +357,13 @@ pca.fit(segmentation_std)
 # COMMAND ----------
 
 
+# In[ ]:
 
 
 pca.components_
 
 
+# In[ ]:
 
 
 df_pca_comp = pd.DataFrame(data = pca.components_,
@@ -347,6 +372,7 @@ df_pca_comp = pd.DataFrame(data = pca.components_,
 df_pca_comp
 
 
+# In[ ]:
 
 
 sns.heatmap(df_pca_comp,
@@ -360,11 +386,13 @@ plt.yticks([0, 1, 2],
            fontsize = 9);
 
 
+# In[ ]:
 
 
 pca.transform(segmentation_std)
 
 
+# In[ ]:
 
 
 scores_pca = pca.transform(segmentation_std)
@@ -378,6 +406,7 @@ scores_pca = pca.transform(segmentation_std)
 # COMMAND ----------
 
 
+# In[ ]:
 
 
 wcss = []
@@ -387,6 +416,7 @@ for i in range(1,11):
     wcss.append(kmeans_pca.inertia_)
 
 
+# In[ ]:
 
 
 plt.figure(figsize = (10,8))
@@ -397,11 +427,13 @@ plt.title('K-means with PCA Clustering')
 plt.show()
 
 
+# In[ ]:
 
 
 kmeans_pca = KMeans(n_clusters = 4, init = 'k-means++', random_state = 42)
 
 
+# In[ ]:
 
 
 kmeans_pca.fit(scores_pca)
@@ -415,6 +447,7 @@ kmeans_pca.fit(scores_pca)
 # COMMAND ----------
 
 
+# In[ ]:
 
 
 df_segm_pca_kmeans = pd.concat([df_segmentation.reset_index(drop = True), pd.DataFrame(scores_pca)], axis = 1)
@@ -422,17 +455,20 @@ df_segm_pca_kmeans.columns.values[-3: ] = ['Component 1', 'Component 2', 'Compon
 df_segm_pca_kmeans['Segment K-means PCA'] = kmeans_pca.labels_
 
 
+# In[ ]:
 
 
 df_segm_pca_kmeans
 
 
+# In[ ]:
 
 
 df_segm_pca_kmeans_freq = df_segm_pca_kmeans.groupby(['Segment K-means PCA']).mean()
 df_segm_pca_kmeans_freq
 
 
+# In[ ]:
 
 
 df_segm_pca_kmeans_freq['N Obs'] = df_segm_pca_kmeans[['Segment K-means PCA','Sex']].groupby(['Segment K-means PCA']).count()
@@ -444,6 +480,7 @@ df_segm_pca_kmeans_freq = df_segm_pca_kmeans_freq.rename({0:'standard',
 df_segm_pca_kmeans_freq
 
 
+# In[ ]:
 
 
 df_segm_pca_kmeans['Legend'] = df_segm_pca_kmeans['Segment K-means PCA'].map({0:'standard', 
@@ -452,6 +489,7 @@ df_segm_pca_kmeans['Legend'] = df_segm_pca_kmeans['Segment K-means PCA'].map({0:
                                                           3:'well-off'})
 
 
+# In[ ]:
 
 
 x_axis = df_segm_pca_kmeans['Component 2']
@@ -462,6 +500,7 @@ plt.title('Clusters by PCA Components')
 plt.show()
 
 
+# In[ ]:
 
 
 x_axis_1 = df_segm_pca_kmeans['Component 3']
@@ -472,6 +511,7 @@ plt.title('Clusters by PCA Components' )
 plt.show()
 
 
+# In[ ]:
 
 
 x_axis_1 = df_segm_pca_kmeans['Component 3']
@@ -490,16 +530,19 @@ plt.show()
 # COMMAND ----------
 
 
+# In[ ]:
 
 
 pickle.dump(scaler, open('scaler.pickle', 'wb'))
 
 
+# In[ ]:
 
 
 pickle.dump(pca, open('pca.pickle', 'wb'))
 
 
+# In[ ]:
 
 
 pickle.dump(kmeans_pca, open('kmeans_pca.pickle', 'wb'))
