@@ -126,7 +126,6 @@ plt.title('Correlation Heatmap')
 plt.show()
 
 
-# In[ ]:
 
 
 # raw data
@@ -145,8 +144,9 @@ plt.title('Visualization of raw data')
 # COMMAND ----------
 
 
-# In[ ]:
 
+
+df_segmentation = df_segmentation.iloc[:,1:]
 
 scaler = StandardScaler()
 segmentation_std = scaler.fit_transform(df_segmentation)
@@ -160,13 +160,11 @@ segmentation_std = scaler.fit_transform(df_segmentation)
 # COMMAND ----------
 
 
-# In[ ]:
 
 
 hier_clust = linkage(segmentation_std, method = 'ward')
 
 
-# In[ ]:
 
 
 plt.figure(figsize = (12,9))
@@ -189,7 +187,6 @@ plt.show()
 # COMMAND ----------
 
 
-# In[ ]:
 
 
 wcss = []
@@ -200,13 +197,11 @@ for i in range(1, 11):
     wcss.append(kmeans.inertia_)
 
 
-# In[ ]:
 
 
 wcss
 
 
-# In[ ]:
 
 
 plt.figure(figsize = (10,8))
@@ -217,7 +212,6 @@ plt.title('K-means Clustering')
 plt.show()
 
 
-# In[ ]:
 
 
 kmeans = KMeans(n_clusters = 4, init = 'k-means++', random_state = 42)
@@ -232,46 +226,39 @@ kmeans.fit(segmentation_std)
 # COMMAND ----------
 
 
-# In[ ]:
 
 
 kmeans.labels_
 
 
-# In[ ]:
 
 
 set(kmeans.labels_)
 
 
-# In[ ]:
 
 
 df_segm_kmeans = df_segmentation.copy()
 df_segm_kmeans['Segment K-means'] = kmeans.labels_
 
 
-# In[ ]:
 
 
 df_segm_analysis = df_segm_kmeans.groupby(['Segment K-means']).mean()
 df_segm_analysis
 
 
-# In[ ]:
 
 
 df_segm_analysis['N Obs'] = df_segm_kmeans[['Segment K-means','Sex']].groupby(['Segment K-means']).count()
 df_segm_analysis['Prop Obs'] = df_segm_analysis['N Obs'] / df_segm_analysis['N Obs'].sum()
 
 
-# In[ ]:
 
 
 df_segm_analysis
 
 
-# In[ ]:
 
 
 # rename cluster
@@ -281,7 +268,6 @@ df_segm_analysis.rename({0:'well-off',
                          3:'career focused'})
 
 
-# In[ ]:
 
 
 df_segm_kmeans['Labels'] = df_segm_kmeans['Segment K-means'].map({0:'well-off', 
@@ -290,7 +276,6 @@ df_segm_kmeans['Labels'] = df_segm_kmeans['Segment K-means'].map({0:'well-off',
                                                                   3:'career focused'})
 
 
-# In[ ]:
 
 
 x_axis = df_segm_kmeans['Age']
@@ -309,7 +294,6 @@ plt.show()
 # COMMAND ----------
 
 
-# In[ ]:
 
 
 pca = PCA()
@@ -318,16 +302,19 @@ pca = PCA()
 # In[ ]:
 
 
+
+
+
+
+
 pca.fit(segmentation_std)
 
 
-# In[ ]:
 
 
 pca.explained_variance_ratio_
 
 
-# In[ ]:
 
 
 plt.figure(figsize = (12,9))
@@ -337,13 +324,11 @@ plt.xlabel('Number of Components')
 plt.ylabel('Cumulative Explained Variance');
 
 
-# In[ ]:
 
 
 pca = PCA(n_components = 3)
 
 
-# In[ ]:
 
 
 pca.fit(segmentation_std)
@@ -357,13 +342,11 @@ pca.fit(segmentation_std)
 # COMMAND ----------
 
 
-# In[ ]:
 
 
 pca.components_
 
 
-# In[ ]:
 
 
 df_pca_comp = pd.DataFrame(data = pca.components_,
@@ -372,7 +355,6 @@ df_pca_comp = pd.DataFrame(data = pca.components_,
 df_pca_comp
 
 
-# In[ ]:
 
 
 sns.heatmap(df_pca_comp,
@@ -386,13 +368,11 @@ plt.yticks([0, 1, 2],
            fontsize = 9);
 
 
-# In[ ]:
 
 
 pca.transform(segmentation_std)
 
 
-# In[ ]:
 
 
 scores_pca = pca.transform(segmentation_std)
@@ -530,13 +510,11 @@ plt.show()
 # COMMAND ----------
 
 
-# In[ ]:
 
 
 pickle.dump(scaler, open('scaler.pickle', 'wb'))
 
 
-# In[ ]:
 
 
 pickle.dump(pca, open('pca.pickle', 'wb'))
@@ -546,4 +524,10 @@ pickle.dump(pca, open('pca.pickle', 'wb'))
 
 
 pickle.dump(kmeans_pca, open('kmeans_pca.pickle', 'wb'))
+
+
+# In[ ]:
+
+
+
 
